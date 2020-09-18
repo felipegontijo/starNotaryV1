@@ -18,10 +18,22 @@ it('has correct name', async () => {
     assert.equal(starName, 'Awesome Udacity Star'); // check if starName was initialized correctly
 });
 
-//can a star be claimed?
-it ('can be claimed', async () => {
+// can a star be claimed?
+it('can be claimed', async () => {
     let instance = await StarNotary.deployed();
     await instance.claimStar({from: owner});
     let starOwner = await instance.starOwner.call();
     assert.equal(starOwner, owner);
-})
+});
+
+// can star ownership change?
+it('can change ownership', async () => {
+    let instance = await StarNotary.deployed();
+    await instance.claimStar({from: owner});
+    let starOwner = await instance.starOwner.call();
+    assert.equal(starOwner, owner);
+    let secondUser = accounts[1];
+    await instance.claimStar({from: secondUser});
+    let secondOwner = await instance.starOwner.call();
+    assert.equal(secondOwner, secondUser);
+});
